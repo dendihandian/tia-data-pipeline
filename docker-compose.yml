@@ -18,7 +18,7 @@ services:
     ports:
       - "32769:5432"
     #volumes:
-      #- ./mnt/postgres:/var/lib/postgresql/data/pgdata
+      #- ./docker/postgres:/var/lib/postgresql/data/pgdata
     environment:
       - POSTGRES_USER=airflow
       - POSTGRES_PASSWORD=airflow
