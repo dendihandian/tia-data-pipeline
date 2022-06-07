@@ -37,31 +37,31 @@ def transform_posts_json():
         data[index]['date_gmt'] = post['date_gmt'].replace('T', ' ').replace('Z', '')
         data[index]['modified_gmt'] = post['modified_gmt'].replace('T', ' ').replace('Z', '')
         data[index]['word_count'] = len(post['content'].split())
-        data[index]['vsitems'] = str(post['vsitems'])
-        data[index]['live_items'] = str(post['live_items'])
-        data[index]['author'] = str(post['author'])
-        data[index]['comments'] = str(post['comments'])
-        data[index]['featured_image'] = str(post['featured_image'])
-        data[index]['post_images'] = str(post['post_images'])
-        data[index]['seo'] = str(post['seo'])
-        data[index]['categories'] = str(post['categories'])
-        data[index]['tags'] = str(post['tags'])
-        data[index]['companies'] = str(post['companies'])
-        data[index]['sponsor'] = str(post['sponsor'])
-        data[index]['external_scripts'] = str(post['external_scripts'])
+        data[index]['vsitems'] = json.dumps(post['vsitems'])
+        data[index]['live_items'] = json.dumps(post['live_items'])
+        data[index]['author'] = json.dumps(post['author'])
+        data[index]['comments'] = json.dumps(post['comments'])
+        data[index]['featured_image'] = json.dumps(post['featured_image'])
+        data[index]['post_images'] = json.dumps(post['post_images'])
+        data[index]['seo'] = json.dumps(post['seo'])
+        data[index]['categories'] = json.dumps(post['categories'])
+        data[index]['tags'] = json.dumps(post['tags'])
+        data[index]['companies'] = json.dumps(post['companies'])
+        data[index]['sponsor'] = json.dumps(post['sponsor'])
+        data[index]['external_scripts'] = json.dumps(post['external_scripts'])
 
     with open(f'/opt/airflow/json/posts/{json_fname}', 'w') as outfile:
         outfile.write(json.dumps(data))
 
 def load_posts_data_to_postgres():
     json_fname = datetime.now().strftime("%Y-%m-%d-%H") + ".json"
-    posts = pd.read_json(f"/opt/airflow/json/posts/2022-06-07-19.json")
+    posts = pd.read_json(f"/opt/airflow/json/posts/{json_fname}")
 
     engine = create_engine('postgresql://airflow:airflow@postgres:5432/airflow_db')
-    posts.head(1).to_sql('posts', con=engine, if_exists='append', index=False)
+    posts.to_sql('posts', con=engine, if_exists='append', index=False)
 
 
-with DAG(dag_id="tia_pipeline", schedule_interval="@hourly", default_args=default_args, catchup=False) as dag:
+with DAG(dag_id="tia_pipeline", schedule_interval="*/5 * * * *", default_args=default_args, catchup=False) as dag:
 
     # check if the tia public api is accessible
     is_tia_public_api_accessible = HttpSensor(
@@ -91,5 +91,8 @@ with DAG(dag_id="tia_pipeline", schedule_interval="@hourly", default_args=defaul
         python_callable=load_posts_data_to_postgres
     )
 
+    # remove json file
+    # remove duplicates using postgresql query
+
     # streams
-    is_tia_public_api_accessible >> extract_latest_posts >> transform_posts_data
+    is_tia_public_api_accessible >> extract_latest_posts >> transform_posts_data >> load_posts_data
