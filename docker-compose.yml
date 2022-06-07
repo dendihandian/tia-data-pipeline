@@ -62,6 +62,7 @@ services:
     volumes:
       - ./docker/airflow/airflow.cfg:/opt/airflow/airflow.cfg
       - ./docker/airflow/dags:/opt/airflow/dags
+      - ./docker/airflow/json:/opt/airflow/json
     ports:
       - 8080:8080
     healthcheck:

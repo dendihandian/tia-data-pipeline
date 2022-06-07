@@ -1,4 +1,6 @@
 note.md
+test.ipynb
+sample.json
 
-# still on the work
-docker-compose.yaml
+**/__pycache__
+**/json/**/*.json
