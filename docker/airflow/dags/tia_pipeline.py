@@ -41,14 +41,14 @@ def create_tia_api_conn():
 
     return True
 
-def extract_latest_posts():
+def save_latest_posts_to_json():
     json_fname = datetime.now().strftime("%Y-%m-%d-%H") + ".json"
     with open(f'/opt/airflow/json/posts/{json_fname}', 'w') as outfile:
         r = requests.get('https://www.techinasia.com/wp-json/techinasia/2.0/posts?page=1&perpage=50', headers={'Content-Type': 'application/json', 'User-Agent': 'Airflow'})
         outfile.write(json.dumps(r.json()['posts']))
 
 
-with DAG(dag_id="tia_etl", schedule_interval="@hourly", default_args=default_args, catchup=False) as dag:
+with DAG(dag_id="tia_pipeline", schedule_interval="@hourly", default_args=default_args, catchup=False) as dag:
 
     # create and enable connection
     create_tia_api_connection = PythonOperator(
@@ -67,10 +67,10 @@ with DAG(dag_id="tia_etl", schedule_interval="@hourly", default_args=default_arg
     )
 
     # load last hour of posts from tia public api
-    extract_last_hour_of_posts = PythonOperator(
-        task_id="extract_last_hour_of_posts",
-        python_callable=extract_latest_posts
+    extract_latest_posts = PythonOperator(
+        task_id="extract_latest_posts",
+        python_callable=save_latest_posts_to_json
     )
 
     # streams
-    create_tia_api_connection >> is_tia_public_api_accessible >> extract_last_hour_of_posts
+    create_tia_api_connection >> is_tia_public_api_accessible >> extract_latest_posts
