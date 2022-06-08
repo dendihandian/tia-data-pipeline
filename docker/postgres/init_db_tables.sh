@@ -3,7 +3,7 @@ set -e
 
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
   CREATE TABLE IF NOT EXISTS public.posts (
-        id INT NOT NULL,
+        id INT PRIMARY KEY NOT NULL,
         date_gmt VARCHAR NOT NULL,
         modified_gmt VARCHAR NOT NULL,
         title VARCHAR NOT NULL,
