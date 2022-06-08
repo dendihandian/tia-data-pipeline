@@ -24,10 +24,10 @@ ETL data pipeline project to ingest data from TIA Public API.
 
 5. After all the service built, execute `docker-compose up -d` to start the services.
     > You can inspect the running services by executing `docker-compose ps` to see if the services are up or failing. if one of the service is failing, you may want to inspect it using `docker-compose logs <service_name>` (eg. `docker-compose logs airflow`). another issue that may happen are the existing services with the same port used by our services. if that happens, try to stop the existing service(s) first and then start our project services.
-6. After all the service running, you can start to open the Airflow UI at [localhost:8080](http://localhost:8080) to make sure the service really went up.
+6. After all the service running, you can start to open the Airflow UI at [http://localhost:8080](http://localhost:8080) to make sure the service really went up.
 
 ### Start/Pause DAGs
-1. Open Airflow UI at [localhost:8080](http://localhost:8080).
+1. Open Airflow UI at [http://localhost:8080](http://localhost:8080).
 2. Login using `admin` as username and `admin` as password.
 3. You will redirected to home page, you can find our paused DAGs here. Let's start with the `posts_pipeline` DAG. 
 
