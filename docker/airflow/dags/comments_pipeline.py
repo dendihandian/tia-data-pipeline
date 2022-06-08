@@ -103,8 +103,6 @@ def load_comments_data_to_postgres():
                 """)
                 engine.execute(sql, {'id': comment['id'],'post': comment['post'],'post_title': comment['post_title'],'post_link': comment['post_link'],'post_featured_image': comment['post_featured_image'],'post_comments_count': comment['post_comments_count'],'content': comment['content'],'excerpt': comment['excerpt'],'status': comment['status'],'type': comment['type'],'parent': comment['parent'],'author': comment['author'],'date_gmt': comment['date_gmt'],'can_edit': comment['can_edit'],'editable_until': comment['editable_until'],'children': comment['children'],'word_count': comment['word_count']})
 
-def remove_comments_json_files():
-    import os
 
 with DAG(dag_id="comments_pipeline", schedule_interval="0 1 * * *", default_args=default_args, catchup=False) as dag:
 
