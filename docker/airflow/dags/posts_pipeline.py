@@ -3,6 +3,7 @@ from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.sensors.http_sensor import HttpSensor
 from airflow.operators.bash_operator import BashOperator
+from airflow.sensors.sql import SqlSensor
 from datetime import timedelta
 from airflow.utils.dates import days_ago
 
@@ -26,26 +27,18 @@ def save_latest_posts_to_json():
         outfile.write(json.dumps(r.json()['posts']))
 
 def transform_posts_json():
-    data = None
+    posts = []
     with open(f'/opt/airflow/json/posts/{post_json_fname}', 'r') as file_content:
-        data = json.load(file_content)
+        posts = json.load(file_content)
 
-    for index, post in enumerate(data):
-        data[index]['date_gmt'] = post['date_gmt'].replace('T', ' ').replace('Z', '')
-        data[index]['modified_gmt'] = post['modified_gmt'].replace('T', ' ').replace('Z', '')
-        data[index]['word_count'] = len(post['content'].split())
-        data[index]['vsitems'] = json.dumps(post['vsitems'])
-        data[index]['live_items'] = json.dumps(post['live_items'])
-        data[index]['author'] = json.dumps(post['author'])
-        data[index]['comments'] = json.dumps(post['comments'])
-        data[index]['featured_image'] = json.dumps(post['featured_image'])
-        data[index]['post_images'] = json.dumps(post['post_images'])
-        data[index]['seo'] = json.dumps(post['seo'])
-        data[index]['categories'] = json.dumps(post['categories'])
-        data[index]['tags'] = json.dumps(post['tags'])
-        data[index]['companies'] = json.dumps(post['companies'])
-        data[index]['sponsor'] = json.dumps(post['sponsor'])
-        data[index]['external_scripts'] = json.dumps(post['external_scripts'])
+    for index, post in enumerate(posts):
+        for key in list(post.keys()):
+            if type(post[key]) in [dict, list]:
+                posts[index][key] = json.dumps(post[key])
+            elif type(post[key]) == str and len(post[key]) == 19 and post[key][10] == "T":
+                posts[index][key] = post[key].replace('T', ' ')
+
+        posts[index]['word_count'] = len(post['content'].split())
 
     with open(f'/opt/airflow/json/posts/{post_json_fname}', 'w') as outfile:
         outfile.write(json.dumps(data))
@@ -79,6 +72,14 @@ with DAG(dag_id="posts_pipeline", schedule_interval="*/3 * * * *", default_args=
         response_check=lambda response: "posts" in response.text
     )
 
+    # check postgres connection
+    is_postgres_accessible = SqlSensor(
+        task_id="is_postgres_accessible",
+        conn_id="tia_postgres",
+        sql="SELECT 1 AS is_accessible;",
+        success=lambda row: row > 0
+    )
+
     # extract latest posts from tia public api
     extract_latest_posts = PythonOperator(
         task_id="extract_latest_posts",
@@ -97,12 +98,12 @@ with DAG(dag_id="posts_pipeline", schedule_interval="*/3 * * * *", default_args=
         python_callable=load_posts_data_to_postgres
     )
 
-    remove_posts_json_file = BashOperator(
-        task_id="remove_posts_json_file",
+    remove_posts_json = BashOperator(
+        task_id="remove_posts_json",
         bash_command=f"""
             rm /opt/airflow/json/posts/{post_json_fname}
         """
     )
 
     # streams
-    is_tia_public_api_accessible >> extract_latest_posts >> transform_posts_data >> load_posts_data >> remove_posts_json_file
+    is_tia_public_api_accessible >> is_postgres_accessible >> extract_latest_posts >> transform_posts_data >> load_posts_data >> remove_posts_json
