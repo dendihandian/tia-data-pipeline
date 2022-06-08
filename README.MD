@@ -18,9 +18,9 @@ ETL data pipeline project to ingest data from TIA Public API.
 1. Clone or download this repository to your machine.
 2. Open your terminal/console and make sure `docker` and `docker-compose` commands are executable.
 3. Go to this repository root directory in using your terminal.
-4. Execute `docker-compose build` to build airflow, postgres, adminer as docker services.
+4. Execute `docker-compose build` to build airflow, postgres, adminer as docker services. 
 
-    > If there is any error, try to execute command several times until it succeed. if it's no luck, raise an issue.
+    > The command will consume a lot of network data, so prepare for the internet. If there is any error, try to execute command several times until it succeed. if it's no luck, raise an issue.
 
 5. After all the service built, execute `docker-compose up -d` to start the services.
     > You can inspect the running services by executing `docker-compose ps` to see if the services are up or failing. if one of the service is failing, you may want to inspect it using `docker-compose logs <service_name>` (eg. `docker-compose logs airflow`). another issue that may happen are the existing services with the same port used by our services. if that happens, try to stop the existing service(s) first and then start our project services.
