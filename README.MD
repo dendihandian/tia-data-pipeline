@@ -60,7 +60,7 @@ ETL data pipeline project to ingest data from TIA Public API.
 
 ### Modify DAGs
 
-You can start to edit any availabe dags under `docker/airflow/dags` folder by using any code editor you prefered. the Docker volume system will map the change to the associated dags in the container.
+You can start to edit any availabe dags under `docker/airflow/dags` folder by using any code editor you prefered. the Docker volume system will map the changes to the associated dags in the container.
 
 > You may want to change any DAG schedule by changing the cron expression in the dag `schedule_interval` parameter.
 
@@ -104,4 +104,12 @@ here is the example of testing one of `comments_pipeline` task:
 
 ```
 docker-compose exec airflow airflow tasks test comments_pipeline is_postgres_accessible 2022-01-01T01:00:00 
+```
+
+### Stoping The Services
+
+To stop all services, you can use the docker-compose command:
+
+```
+docker-compose down
 ```
