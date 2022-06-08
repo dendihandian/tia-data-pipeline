@@ -67,7 +67,7 @@ def load_posts_data_to_postgres():
 
 
 
-with DAG(dag_id="tia_pipeline", schedule_interval="*/3 * * * *", default_args=default_args, catchup=False) as dag:
+with DAG(dag_id="posts_pipeline", schedule_interval="*/3 * * * *", default_args=default_args, catchup=False) as dag:
 
     # check if the tia public api is accessible
     is_tia_public_api_accessible = HttpSensor(
