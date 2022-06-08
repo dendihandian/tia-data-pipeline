@@ -15,21 +15,21 @@ ETL data pipeline project to ingest data from TIA Public API.
     - have 2GB RAM allocated for the VM and 2GB free disk space to run the services.
 
 ### Setting Up The Project
-1. clone or download this repository to your machine.
-2. open your terminal/console and make sure `docker` and `docker-compose` commands are executable.
-3. go to this repository root directory in using your terminal.
-4. execute `docker-compose build` to build airflow, postgres, adminer as docker services.
+1. Clone or download this repository to your machine.
+2. Open your terminal/console and make sure `docker` and `docker-compose` commands are executable.
+3. Go to this repository root directory in using your terminal.
+4. Execute `docker-compose build` to build airflow, postgres, adminer as docker services.
 
-    > if there is any error, try to execute command several times until it succeed. if it's no luck, raise an issue.
+    > If there is any error, try to execute command several times until it succeed. if it's no luck, raise an issue.
 
-5. after all the service built, execute `docker-compose up -d` to start the services.
-    > you can inspect the running services by executing `docker-compose ps` to see if the services are up or failing. if one of the service is failing, you may want to inspect it using `docker-compose logs <service_name>` (eg. `docker-compose logs airflow`). another issue that may happen are the existing services with the same port used by our services. if that happens, try to stop the existing service(s) first and then start our project services.
-6. after all the service running, you can start to open the Airflow UI at [localhost:8080](localhost:8080) to make sure the service really went up.
+5. After all the service built, execute `docker-compose up -d` to start the services.
+    > You can inspect the running services by executing `docker-compose ps` to see if the services are up or failing. if one of the service is failing, you may want to inspect it using `docker-compose logs <service_name>` (eg. `docker-compose logs airflow`). another issue that may happen are the existing services with the same port used by our services. if that happens, try to stop the existing service(s) first and then start our project services.
+6. After all the service running, you can start to open the Airflow UI at [localhost:8080](http://localhost:8080) to make sure the service really went up.
 
 ### Start/Pause DAGs
-1. open Airflow UI at [localhost:8080](localhost:8080).
-2. login using `admin` as username and `admin` as password.
-3. you will redirected to home page, you can find our paused DAGs here. Let's start with the `posts_pipeline` DAG. 
+1. Open Airflow UI at [localhost:8080](http://localhost:8080).
+2. Login using `admin` as username and `admin` as password.
+3. You will redirected to home page, you can find our paused DAGs here. Let's start with the `posts_pipeline` DAG. 
 
 ![posts_pipeline_inlist](/docs/images/posts_pipeline_inlist.png)
 
@@ -49,8 +49,8 @@ ETL data pipeline project to ingest data from TIA Public API.
 
 ### Monitoring The Data Using Adminer
 
-1. Open Adminer web UI at [http://localhost:32767](http://localhost:32767).
-2. login using `airflow` as username and `airflow` as password. make sure use `PostgreSQL` as system, `postgres` as system, and `airflow_db` as database.
+1. Open Adminer web UI at [localhost:32767](http://localhost:32767).
+2. Login using `airflow` as username and `airflow` as password. make sure use `PostgreSQL` as system, `postgres` as system, and `airflow_db` as database.
 
 ![adminer_login_page](/docs/images/adminer_login_page.png)
 
@@ -74,7 +74,7 @@ You can test DAGs pipeline using the command:
 docker-compose exec airflow airflow dags test <dag_id> <desired_execution_date>
 ```
 
-here is the example to test the `posts_pipeline` dag:
+Here is the example to test the `posts_pipeline` dag:
 
 ```
 docker-compose exec airflow airflow dags test comments_pipeline 2022-01-01
@@ -94,7 +94,7 @@ When you are developing a task, you may want to test it individually using the c
 docker-compose exec airflow airflow tasks test <dag_id> <task_id> <desired_execution_date>
 ```
 
-here is the example of testing one of `posts_pipeline` task:
+Here is the example of testing one of `posts_pipeline` task:
 
 ```
 docker-compose exec airflow airflow tasks test posts_pipeline is_tia_public_api_accessible 2022-01-01
