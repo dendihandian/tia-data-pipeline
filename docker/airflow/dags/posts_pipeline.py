@@ -41,7 +41,7 @@ def transform_posts_json():
         posts[index]['word_count'] = len(post['content'].split())
 
     with open(f'/opt/airflow/json/posts/{post_json_fname}', 'w') as outfile:
-        outfile.write(json.dumps(data))
+        outfile.write(json.dumps(posts))
 
 def load_posts_data_to_postgres():
     from sqlalchemy import create_engine
@@ -60,7 +60,7 @@ def load_posts_data_to_postgres():
 
 
 
-with DAG(dag_id="posts_pipeline", schedule_interval="*/3 * * * *", default_args=default_args, catchup=False) as dag:
+with DAG(dag_id="posts_pipeline", schedule_interval="@hourly", default_args=default_args, catchup=False) as dag:
 
     # check if the tia public api is accessible
     is_tia_public_api_accessible = HttpSensor(
@@ -101,7 +101,7 @@ with DAG(dag_id="posts_pipeline", schedule_interval="*/3 * * * *", default_args=
     remove_posts_json = BashOperator(
         task_id="remove_posts_json",
         bash_command=f"""
-            rm /opt/airflow/json/posts/{post_json_fname}
+            rm -rf /opt/airflow/json/posts/{post_json_fname}
         """
     )
 
