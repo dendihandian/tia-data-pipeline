@@ -50,7 +50,7 @@ ETL data pipeline project to ingest data from TIA Public API.
 ### Monitoring The Data Using Adminer
 
 1. Open Adminer web UI at [localhost:32767](http://localhost:32767).
-2. Login using `airflow` as username and `airflow` as password. make sure use `PostgreSQL` as system, `postgres` as system, and `airflow_db` as database.
+2. Login using `airflow` as username and `airflow` as password. make sure use `PostgreSQL` as system, `postgres` as server, and `airflow_db` as database.
 
 ![adminer_login_page](/docs/images/adminer_login_page.png)
 
