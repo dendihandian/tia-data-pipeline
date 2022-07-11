@@ -80,6 +80,7 @@ services:
     container_name: streamlit
     volumes:
       - ./docker/streamlit/dashboard.py:/app/dashboard.py
+      - ./docker/streamlit/config.toml:/app/.streamlit/config.toml
     ports:
       - 8501:8501
     healthcheck:
