@@ -72,6 +72,23 @@ services:
       retries: 10
 
 ######################################################
+# Streamlit
+######################################################
+  streamlit:
+    build: ./docker/streamlit
+    restart: always
+    container_name: streamlit
+    volumes:
+      - ./docker/streamlit/dashboard.py:/app/dashboard.py
+    ports:
+      - 8501:8501
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "streamlit", "8501" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+
+######################################################
 # NETWORK
 ######################################################
 
