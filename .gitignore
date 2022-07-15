@@ -2,5 +2,7 @@ note.md
 test.ipynb
 sample.json
 
+crawler/data
+
 **/__pycache__
 **/json/**/*.json
