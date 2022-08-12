@@ -2,5 +2,10 @@ note.md
 test.ipynb
 sample.json
 
+crawler/data
+docker/mongo
+
 **/__pycache__
 **/json/**/*.json
+
+.aws
