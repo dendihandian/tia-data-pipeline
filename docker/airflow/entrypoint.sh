@@ -11,7 +11,7 @@ airflow users create -u admin -p admin -r Admin -e admin@admin.com -f admin -l a
 
 # Create custom connection for dags and tasks
 airflow connections add tia_api --conn-type http --conn-host https://www.techinasia.com/wp-json/techinasia/2.0/
-airflow connections add tia_postgres --conn-type postgres --conn-host postgres --conn-port 5432 --conn-schema airflow_db --conn-login airflow --conn-password airflow
+airflow connections add tia_postgres --conn-type postgres --conn-host postgres --conn-port 5432 --conn-schema tia_db --conn-login airflow --conn-password airflow
 
 # Run the web server in foreground (for docker logs)
 exec airflow webserver

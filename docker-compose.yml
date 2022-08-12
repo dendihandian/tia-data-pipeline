@@ -8,7 +8,7 @@ services:
 ######################################################
   postgres:
     build: './docker/postgres'
-    restart: always
+    # restart: always
     container_name: postgres
     logging:
       driver: "json-file"
@@ -22,17 +22,17 @@ services:
     environment:
       - POSTGRES_USER=airflow
       - POSTGRES_PASSWORD=airflow
-      - POSTGRES_DB=airflow_db
+      - POSTGRES_DB=tia_db
       #- PGDATA=/var/lib/postgresql/data/pgdata
     healthcheck:
-      test: [ "CMD", "pg_isready", "-q", "-d", "airflow_db", "-U", "airflow" ]
+      test: [ "CMD", "pg_isready", "-q", "-d", "tia_db", "-U", "airflow" ]
       timeout: 45s
       interval: 10s
       retries: 10
 
   adminer:
     image: wodby/adminer:latest
-    restart: always
+    # restart: always
     container_name: adminer
     logging:
       driver: "json-file"
@@ -44,7 +44,7 @@ services:
     environment:
       - ADMINER_DEFAULT_DB_DRIVER=psql
       - ADMINER_DEFAULT_DB_HOST=postgres
-      - ADMINER_DEFAULT_DB_NAME=airflow_db
+      - ADMINER_DEFAULT_DB_NAME=tia_db
     healthcheck:
       test: [ "CMD", "nc", "-z", "adminer", "9000" ]
       timeout: 45s
@@ -57,7 +57,7 @@ services:
 
   airflow:
     build: ./docker/airflow
-    restart: always
+    # restart: always
     container_name: airflow
     volumes:
       - ./docker/airflow/airflow.cfg:/opt/airflow/airflow.cfg
